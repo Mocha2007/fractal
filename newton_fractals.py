@@ -81,7 +81,8 @@ def plotting(f):
 		zlist.append(z)
 		color = get_rgb_from_complex(z, i)
 		plt.scatter(point.real, point.imag, marker='s', color=color) # 3 ms
-		plt.scatter(z.real, z.imag, marker='x', color=(0, 0, 0)) # 2 ms
+		if i < iterations-1:
+			plt.scatter(z.real, z.imag, marker='x', color=(0, 0, 0)) # 2 ms
 	plt.title('Newton Fractal')
 	plt.xlabel('real')
 	plt.ylabel('imag')
@@ -93,7 +94,8 @@ def plotting(f):
 	for (point, i), z in zip(ilist, zlist):
 		color = get_rgb_from_i(i)
 		plt.scatter(point.real, point.imag, marker='s', color=color)
-		plt.scatter(z.real, z.imag, marker='x', color=(1, 0, 0))
+		if i < iterations-1:
+			plt.scatter(z.real, z.imag, marker='x', color=(1, 0, 0))
 	plt.title('Iterations')
 	plt.xlabel('real')
 	plt.ylabel('imag')
