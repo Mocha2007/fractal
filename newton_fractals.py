@@ -1,13 +1,18 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from math import atan2, pi
+from math import atan2, isnan, pi
 from colorsys import hsv_to_rgb
 
 inf = float('inf')
-x_range = np.linspace(-2, 2, 100)
+nan = float('nan')
+
+
+graph_width = 2
+max_tolerance = 2**.5 * graph_width
+x_range = np.linspace(-graph_width, graph_width, 100)
 iterations = 100
 resolution = 25
-resolution_axis = np.linspace(-2, 2, resolution)
+resolution_axis = np.linspace(-graph_width, graph_width, resolution)
 tolerance = 10**-5
 color_convergence = 2
 
@@ -25,6 +30,8 @@ point_grid = get_grid()
 
 
 def get_rgb_from_complex(z: complex) -> (float, float, float):
+	if abs(z) == inf or isnan(z):
+		return 0.5, 0.5, 0.5
 	theta = atan2(z.imag, z.real) % (2*pi)
 	theta /= 2*pi
 	return hsv_to_rgb(theta, 1, 1)
@@ -48,7 +55,7 @@ def newton(f, z: complex) -> (complex, int):
 		if f_ == 0: # no zero
 			return inf, 0
 		c = f(z)/f_
-		if 2 < abs(c): # diverges
+		if max_tolerance < abs(c): # diverges
 			return inf, 0
 		if abs(c) < tolerance: # converges
 			# print('c')
@@ -88,9 +95,10 @@ def plotting(f):
 
 	# function plot
 	plt.subplot(1, 3, 3)
-	plt.plot(x_range, f(x_range), 'b')
-	plt.plot(x_range, [derivative(f, x) for x in x_range], 'r')
-	plt.plot(x_range, [derivative(f, x, 2) for x in x_range], 'g')
+	plt.plot(x_range, f(x_range).real, 'b')
+	print(f(x_range).real)
+	plt.plot(x_range, [derivative(f, x).real for x in x_range], 'r')
+	plt.plot(x_range, [derivative(f, x, 2).real for x in x_range], 'g')
 	plt.title('Function')
 	plt.grid()
 
