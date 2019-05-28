@@ -98,16 +98,18 @@ def plotting(f):
 
 	# function plot
 	plt.subplot(1, 3, 3)
-	plt.plot(x_range, [f(x).real for x in x_range], 'b')
-	plt.plot(x_range, [f(x).imag for x in x_range], 'tab:orange')
+	reals = [f(x).real for x in x_range]
+	imags = [f(x).imag for x in x_range]
+	plt.plot(x_range, reals, 'b')
+	plt.plot(x_range, imags, 'tab:orange')
 	plt.plot(x_range, [derivative(f, x).real for x in x_range], 'r')
 	plt.plot(x_range, [derivative(f, x, 2).real for x in x_range], 'g')
 	plt.title('Function')
 	plt.grid()
 	plt.xlim(-graph_width, graph_width)
-	plt.ylim(-2*graph_width, 2*graph_width)
+	plt.ylim(min(reals+imags), max(reals+imags))
 
 	plt.show()
 
-from cmath import log
-plotting(log)
+import cmath
+plotting(cmath.sin)
