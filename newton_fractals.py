@@ -22,10 +22,14 @@ def get_grid() -> np.array:
 point_grid = get_grid()
 
 
-def get_rgb_from_complex(z: complex) -> (int, int, int):
+def get_rgb_from_complex(z: complex) -> (float, float, float):
 	theta = atan2(z.imag, z.real) % (2*pi)
 	theta /= 2*pi
 	return hsv_to_rgb(theta, 1, 1)
+
+
+def get_rgb_from_i(i: int) -> (float, float, float):
+	return hsv_to_rgb(0, 0, (i/iterations)**.5)
 
 
 def derivative(f, x: float, n: int=1) -> float:
@@ -36,8 +40,8 @@ def derivative(f, x: float, n: int=1) -> float:
 	return (f(x+tolerance) - f(x)) / tolerance
 
 
-def newton(f, z: complex) -> complex:
-	for _ in range(iterations):
+def newton(f, z: complex) -> (complex, int):
+	for i in range(iterations):
 		f_ = derivative(f, z)
 		if f_ == 0:
 			return z
@@ -48,26 +52,39 @@ def newton(f, z: complex) -> complex:
 			break
 		if 2 < abs(c): # diverges
 			# print('d')
+			i = 0
 			z = float('inf')
 			break
 		z -= c
 	# input()
-	return z
+	return z, i
 
 
 def plotting(f):
 	# plotting
 	# actual fractal
-	plt.subplot(1, 2, 1)
+	plt.subplot(1, 3, 1)
+	ilist = []
 	for point in point_grid:
-		z = newton(f, point)
-		plt.scatter(point.real, point.imag, marker='s', color=get_rgb_from_complex(z))
+		z, i = newton(f, point)
+		ilist.append((point, i))
+		color = get_rgb_from_complex(z)
+		plt.scatter(point.real, point.imag, marker='s', color=color)
 	plt.title('Newton Fractal')
 	plt.xlabel('real')
 	plt.ylabel('imag')
 
+	# iterations
+	plt.subplot(1, 3, 2)
+	for point, i in ilist:
+		color = get_rgb_from_i(i)
+		plt.scatter(point.real, point.imag, marker='s', color=color)
+	plt.title('Iterations')
+	plt.xlabel('real')
+	plt.ylabel('imag')
+
 	# function plot
-	plt.subplot(1, 2, 2)
+	plt.subplot(1, 3, 3)
 	plt.plot(x_range, f(x_range), 'b')
 	plt.plot(x_range, [derivative(f, x) for x in x_range], 'r')
 	plt.plot(x_range, [derivative(f, x, 2) for x in x_range], 'g')
