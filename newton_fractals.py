@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 from math import atan2, isnan, pi
 from colorsys import hsv_to_rgb
 
@@ -104,10 +105,18 @@ def plotting(f):
 	plt.plot(x_range, imags, 'tab:orange')
 	plt.plot(x_range, [derivative(f, x).real for x in x_range], 'r')
 	plt.plot(x_range, [derivative(f, x, 2).real for x in x_range], 'g')
+	# prettification
 	plt.title('Function')
 	plt.grid()
 	plt.xlim(-graph_width, graph_width)
 	plt.ylim(min(reals+imags), max(reals+imags))
+	# legend
+	plt.legend(handles=[
+		mpatches.Patch(color='blue', label='f(x)'),
+		mpatches.Patch(color='tab:orange', label='Im(f(x))'),
+		mpatches.Patch(color='red', label='f′(x)'),
+		mpatches.Patch(color='green', label='f″(x)'),
+	])
 
 	plt.show()
 
