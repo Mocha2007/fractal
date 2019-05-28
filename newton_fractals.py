@@ -11,10 +11,10 @@ nan = float('nan')
 
 graph_width = 2
 x_range = np.linspace(-graph_width, graph_width, 100)
-iterations = 20
+iterations = 50
 resolution = 49
 resolution_axis = np.linspace(-graph_width, graph_width, resolution)
-tolerance = 10**-5
+tolerance = 10**-6
 color_convergence = 2
 
 
