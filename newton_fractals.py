@@ -99,10 +99,13 @@ def plotting(f):
 	# function plot
 	plt.subplot(1, 3, 3)
 	plt.plot(x_range, [f(x).real for x in x_range], 'b')
+	plt.plot(x_range, [f(x).imag for x in x_range], 'tab:orange')
 	plt.plot(x_range, [derivative(f, x).real for x in x_range], 'r')
 	plt.plot(x_range, [derivative(f, x, 2).real for x in x_range], 'g')
 	plt.title('Function')
 	plt.grid()
+	plt.xlim(-graph_width, graph_width)
+	plt.ylim(-2*graph_width, 2*graph_width)
 
 	plt.show()
 
