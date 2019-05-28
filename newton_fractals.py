@@ -8,6 +8,7 @@ iterations = 100
 resolution = 30
 resolution_axis = np.linspace(-2, 2, resolution)
 tolerance = 10**-5
+color_convergence = 2
 
 
 # generate point grid
@@ -29,7 +30,7 @@ def get_rgb_from_complex(z: complex) -> (float, float, float):
 
 
 def get_rgb_from_i(i: int) -> (float, float, float):
-	return hsv_to_rgb(0, 0, (i/iterations)**.5)
+	return hsv_to_rgb(0, 0, (i/iterations)**(1/color_convergence))
 
 
 def derivative(f, x: float, n: int=1) -> float:
