@@ -72,6 +72,7 @@ def plotting(f):
 	plt.plot(x_range, [derivative(f, x) for x in x_range], 'r')
 	plt.plot(x_range, [derivative(f, x, 2) for x in x_range], 'g')
 	plt.title('Function')
+	plt.grid()
 
 	plt.show()
 
