@@ -27,16 +27,9 @@ def get_rgb_from_complex(z: complex) -> (int, int, int):
 	theta /= 2*pi
 	return hsv_to_rgb(theta, 1, 1)
 
+
 def derivative(f, x: float) -> float:
-	step = 1
-	d = x
-	last_d = x + 1
-	fx = f(x)
-	while round(d, 3) != round(last_d, 3):
-		last_d = d
-		d = (fx - f(x+step)) / step
-		step /= 2
-	return d
+	return (f(x) - f(x+tolerance)) / tolerance
 
 
 def newton(f, z: complex) -> complex:
