@@ -59,8 +59,8 @@ def newton(f, z: complex) -> (complex, int):
 			c = f(z)/f_
 		except ValueError:
 			return nan, 0
-		if max_tolerance < abs(c): # diverges
-			return inf, 0
+		# if max_tolerance < abs(c): # diverges
+		# 	return inf, 0
 		if abs(c) < tolerance: # converges
 			# print('c')
 			break
@@ -122,4 +122,4 @@ def plotting(f):
 	plt.show()
 
 import cmath
-plotting(cmath.sin)
+plotting(lambda z: z**3 - 1)
