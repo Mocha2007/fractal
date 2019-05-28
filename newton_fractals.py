@@ -11,7 +11,7 @@ nan = float('nan')
 graph_width = 2
 max_tolerance = 2**.5 * graph_width
 x_range = np.linspace(-graph_width, graph_width, 100)
-iterations = 100
+iterations = 20
 resolution = 49
 resolution_axis = np.linspace(-graph_width, graph_width, resolution)
 tolerance = 10**-5
@@ -30,12 +30,13 @@ def get_grid() -> np.array:
 point_grid = get_grid()
 
 
-def get_rgb_from_complex(z: complex) -> (float, float, float):
+def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
 	if abs(z) == inf or isnan(z):
 		return 0.5, 0.5, 0.5
 	theta = atan2(z.imag, z.real) % (2*pi)
 	theta /= 2*pi
-	return hsv_to_rgb(theta, 1, 1)
+	value = 1 - i / iterations
+	return hsv_to_rgb(theta, 1, value)
 
 
 def get_rgb_from_i(i: int) -> (float, float, float):
@@ -82,7 +83,7 @@ def plotting(f):
 		z, i = newton(f, point)
 		ilist.append((point, i))
 		zlist.append(z)
-		color = get_rgb_from_complex(z)
+		color = get_rgb_from_complex(z, i)
 		plt.scatter(point.real, point.imag, marker='s', color=color)
 		plt.scatter(z.real, z.imag, marker='x', color=(0, 0, 0))
 	plt.title('Newton Fractal')
@@ -128,4 +129,5 @@ def plotting(f):
 	plt.show()
 
 import cmath
-plotting(lambda x: cmath.exp(x) + 1)
+plotting(lambda z: z**3 - 2*z + 2)
+# plotting(lambda z: z**(4+3j) - 1)
