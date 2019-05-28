@@ -38,14 +38,16 @@ def newton(f, z: complex) -> complex:
 		if f_ == 0:
 			return z
 		c = f(z)/f_
+		# print(z, c)
 		if abs(c) < tolerance: # converges
-			print('c')
+			# print('c')
 			break
 		if 2 < abs(c): # diverges
-			print('d')
+			# print('d')
 			z = float('inf')
 			break
-		z -= c
+		z += c
+	# input()
 	return z
 
 
