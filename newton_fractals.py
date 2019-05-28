@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 from math import atan2, pi
 from colorsys import hsv_to_rgb
 
+inf = float('inf')
 x_range = np.linspace(-2, 2, 100)
 iterations = 100
-resolution = 30
+resolution = 25
 resolution_axis = np.linspace(-2, 2, resolution)
 tolerance = 10**-5
 color_convergence = 2
@@ -44,17 +45,13 @@ def derivative(f, x: float, n: int=1) -> float:
 def newton(f, z: complex) -> (complex, int):
 	for i in range(iterations):
 		f_ = derivative(f, z)
-		if f_ == 0:
-			return z
+		if f_ == 0: # no zero
+			return inf, 0
 		c = f(z)/f_
-		# print(z, c)
+		if 2 < abs(c): # diverges
+			return inf, 0
 		if abs(c) < tolerance: # converges
 			# print('c')
-			break
-		if 2 < abs(c): # diverges
-			# print('d')
-			i = 0
-			z = float('inf')
 			break
 		z -= c
 	# input()
