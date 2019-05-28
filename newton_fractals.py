@@ -5,7 +5,7 @@ from colorsys import hsv_to_rgb
 
 x_range = np.linspace(-2, 2, 100)
 iterations = 100
-resolution = 20
+resolution = 30
 resolution_axis = np.linspace(-2, 2, resolution)
 tolerance = 10**-5
 
@@ -61,7 +61,7 @@ def plotting(f):
 	plt.subplot(1, 2, 1)
 	for point in point_grid:
 		z = newton(f, point)
-		plt.scatter(point.real, point.imag, color=get_rgb_from_complex(z))
+		plt.scatter(point.real, point.imag, marker='s', color=get_rgb_from_complex(z))
 	plt.title('Newton Fractal')
 	plt.xlabel('real')
 	plt.ylabel('imag')
