@@ -29,7 +29,7 @@ def get_rgb_from_complex(z: complex) -> (int, int, int):
 
 
 def derivative(f, x: float) -> float:
-	return (f(x) - f(x+tolerance)) / tolerance
+	return (f(x+tolerance) - f(x)) / tolerance
 
 
 def newton(f, z: complex) -> complex:
@@ -46,7 +46,7 @@ def newton(f, z: complex) -> complex:
 			# print('d')
 			z = float('inf')
 			break
-		z += c
+		z -= c
 	# input()
 	return z
 
