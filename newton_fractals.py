@@ -51,10 +51,13 @@ def derivative(f, x: float, n: int=1) -> float:
 
 def newton(f, z: complex) -> (complex, int):
 	for i in range(iterations):
-		f_ = derivative(f, z)
-		if f_ == 0: # no zero
-			return inf, 0
-		c = f(z)/f_
+		try:
+			f_ = derivative(f, z)
+			if f_ == 0: # no zero
+				return inf, 0
+			c = f(z)/f_
+		except ValueError:
+			return nan, 0
 		if max_tolerance < abs(c): # diverges
 			return inf, 0
 		if abs(c) < tolerance: # converges
@@ -95,8 +98,7 @@ def plotting(f):
 
 	# function plot
 	plt.subplot(1, 3, 3)
-	plt.plot(x_range, f(x_range).real, 'b')
-	print(f(x_range).real)
+	plt.plot(x_range, [f(x).real for x in x_range], 'b')
 	plt.plot(x_range, [derivative(f, x).real for x in x_range], 'r')
 	plt.plot(x_range, [derivative(f, x, 2).real for x in x_range], 'g')
 	plt.title('Function')
@@ -104,4 +106,5 @@ def plotting(f):
 
 	plt.show()
 
-plotting(lambda z: z**3 - 2*z + 2)
+from cmath import log
+plotting(log)
