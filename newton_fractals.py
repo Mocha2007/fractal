@@ -107,6 +107,7 @@ def plotting(f):
 	plt.plot(x_range, [derivative(f, x, 2).real for x in x_range], 'g')
 	# prettification
 	plt.title('Function')
+	plt.xlabel('x')
 	plt.grid()
 	plt.xlim(-graph_width, graph_width)
 	plt.ylim(min(reals+imags), max(reals+imags))
