@@ -3,13 +3,13 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from math import atan2, isnan, pi
 from colorsys import hsv_to_rgb
+from time import time
 
 inf = float('inf')
 nan = float('nan')
 
 
 graph_width = 2
-max_tolerance = 2**.5 * graph_width
 x_range = np.linspace(-graph_width, graph_width, 100)
 iterations = 20
 resolution = 49
@@ -62,13 +62,9 @@ def newton(f, z: complex) -> (complex, int):
 			return nan, 0
 		except OverflowError:
 			return z, iterations
-		# if max_tolerance < abs(c): # diverges
-		# 	return inf, 0
 		if abs(c) < tolerance: # converges
-			# print('c')
 			break
 		z -= c
-	# input()
 	return z, i
 
 
@@ -84,8 +80,8 @@ def plotting(f):
 		ilist.append((point, i))
 		zlist.append(z)
 		color = get_rgb_from_complex(z, i)
-		plt.scatter(point.real, point.imag, marker='s', color=color)
-		plt.scatter(z.real, z.imag, marker='x', color=(0, 0, 0))
+		plt.scatter(point.real, point.imag, marker='s', color=color) # 3 ms
+		plt.scatter(z.real, z.imag, marker='x', color=(0, 0, 0)) # 2 ms
 	plt.title('Newton Fractal')
 	plt.xlabel('real')
 	plt.ylabel('imag')
