@@ -28,7 +28,11 @@ def get_rgb_from_complex(z: complex) -> (int, int, int):
 	return hsv_to_rgb(theta, 1, 1)
 
 
-def derivative(f, x: float) -> float:
+def derivative(f, x: float, n: int=1) -> float:
+	assert 0 < n and type(n) == int
+	n -= 1
+	if n:
+		return derivative(lambda a: derivative(f, a), x, n)
 	return (f(x+tolerance) - f(x)) / tolerance
 
 
@@ -66,6 +70,7 @@ def plotting(f):
 	plt.subplot(1, 2, 2)
 	plt.plot(x_range, f(x_range), 'b')
 	plt.plot(x_range, [derivative(f, x) for x in x_range], 'r')
+	plt.plot(x_range, [derivative(f, x, 2) for x in x_range], 'g')
 	plt.title('Function')
 
 	plt.show()
