@@ -86,6 +86,8 @@ def plotting(f):
 	plt.title('Newton Fractal')
 	plt.xlabel('real')
 	plt.ylabel('imag')
+	plt.xlim(-graph_width, graph_width)
+	plt.ylim(-graph_width, graph_width)
 
 	# iterations
 	plt.subplot(1, 3, 2)
@@ -96,6 +98,8 @@ def plotting(f):
 	plt.title('Iterations')
 	plt.xlabel('real')
 	plt.ylabel('imag')
+	plt.xlim(-graph_width, graph_width)
+	plt.ylim(-graph_width, graph_width)
 
 	# function plot
 	plt.subplot(1, 3, 3)
@@ -122,4 +126,4 @@ def plotting(f):
 	plt.show()
 
 import cmath
-plotting(lambda z: z**3 - 1)
+plotting(cmath.sin)
