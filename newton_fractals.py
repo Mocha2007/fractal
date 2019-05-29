@@ -31,7 +31,7 @@ point_grid = get_grid()
 
 
 def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
-	if abs(z) == inf or isnan(z):
+	if abs(z) == inf or isnan(z.real) or isnan(z.imag):
 		return 0.5, 0.5, 0.5
 	theta = atan2(z.imag, z.real) % (2*pi)
 	theta /= 2*pi
