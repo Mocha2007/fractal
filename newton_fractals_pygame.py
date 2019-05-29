@@ -2,6 +2,7 @@ import pygame
 from math import atan2, isnan, log10, pi
 from colorsys import hsv_to_rgb
 from inspect import getsourcelines
+from time import sleep
 
 inf = float('inf')
 nan = float('nan')
@@ -15,7 +16,7 @@ root_size = 4
 graph_width = 2
 iterations = 50
 tolerance = 10**-6
-function = lambda z: z**4 - 5*z**2 + 4
+function = lambda z: z**4 + 1
 
 
 def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
@@ -116,3 +117,4 @@ while 1:
 			pygame.display.quit()
 			pygame.quit()
 			exit()
+	sleep(.1)
