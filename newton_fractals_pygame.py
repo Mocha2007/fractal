@@ -16,7 +16,7 @@ root_size = 4
 graph_width = 2
 iterations = 50
 tolerance = 10**-6
-function = lambda z: z**4 + 1
+function = lambda z: z**4 - 1
 
 
 def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
@@ -104,7 +104,11 @@ def plotting(f): # ~40 µs/px avg.
 pygame.init()
 screen = pygame.display.set_mode(size)
 refresh = pygame.display.flip
-title = 'Newton Fractal of ' + getsourcelines(function)[0][0]
+title = 'Newton Fractal'
+try:
+	title += ' of ' + getsourcelines(function)[0][0]
+except TypeError:
+	pass
 pygame.display.set_caption(title)
 
 # MAIN
