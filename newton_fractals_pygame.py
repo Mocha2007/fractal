@@ -9,14 +9,15 @@ nan = float('nan')
 black = 0, 0, 0
 red = 255, 0, 0
 
-size = 400, 400
+size = 150, 150
 width, height = size
 root_size = 4
 
 graph_width = 2
 iterations = 50
 tolerance = 10**-6
-function = lambda z: z**4 - 1
+import cmath
+function = lambda z: z**3 - 2*z + 2
 
 
 def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
@@ -100,6 +101,13 @@ def plotting(f): # ~40 µs/px avg.
 		draw_x(get_coords_from_z(zero))
 	refresh()
 
+def movie(f, from_val: complex, to_val: complex, frames: int):
+	"""Creates a series of images with filename movie/n.png. f is a function which takes a complex number and returns a function to throw into plotting."""
+	values = (from_val + i/frames * (to_val - from_val) for i in range(frames))
+	for i, value in enumerate(values):
+		plotting(f(value))
+		pygame.image.save(screen, 'movie/{0}.png'.format(str(i).zfill(5)))
+
 # PYGAME STUFF
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -113,6 +121,7 @@ pygame.display.set_caption(title)
 
 # MAIN
 
+movie(lambda x: lambda z: (z-1)*(z**2+1)*(z - x), -2, 2, 100)
 plotting(function)
 pygame.image.save(screen, 'fractal.png')
 while 1:
