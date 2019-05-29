@@ -82,7 +82,8 @@ def draw_x(coords: (int, int), color: (int, int, int)=black):
 		screen.set_at(upward_diagonal_coords, color)
 
 
-def plotting(f): # each pixel takes ~60 microseconds avg.
+def plotting(f): # takes ~40 µs/px avg.
+	from time import time
 	zeroes = set()
 	for x in range(width):
 		for y in range(height):
