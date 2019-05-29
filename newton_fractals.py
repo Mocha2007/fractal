@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from math import atan2, isnan, pi
 from colorsys import hsv_to_rgb
-from time import time
 
 inf = float('inf')
 nan = float('nan')
