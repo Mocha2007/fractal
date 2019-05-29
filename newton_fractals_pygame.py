@@ -5,16 +5,17 @@ from inspect import getsourcelines
 
 inf = float('inf')
 nan = float('nan')
-black =   0,   0,   0
-white = 255, 255, 255
+black = 0, 0, 0
+red = 255, 0, 0
 
-size = 600, 600
+size = 300, 300
 width, height = size
+root_size = 4
 
 graph_width = 2
 iterations = 50
 tolerance = 10**-6
-function = lambda z: z**(4+3j) - 1
+function = lambda z: z**3 - 1
 
 
 def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
@@ -56,28 +57,44 @@ def map_to_range(start: float, end: float, fraction: float) -> float:
 	return (end-start) * fraction + start
 
 
-def get_z_from_coords(x: int, y: int) -> complex:
+def get_z_from_coords(coords: (int, int)) -> complex:
+	x, y = coords
 	real = map_to_range(-graph_width, graph_width, x/width)
-	imag = map_to_range(-graph_width, graph_width, y/height)
+	imag = map_to_range(-graph_width, graph_width, (height-y)/height)
 	return real+1j*imag
+
+
+def get_coords_from_z(z: complex) -> (int, int):
+	x = map_to_range(0, width, z.real / (2*graph_width) + 1/2)
+	y = map_to_range(height, 0, z.imag / (2*graph_width) + 1/2)
+	return x, y
+
+
+def draw_x(coords: (int, int), color: (int, int, int)=black):
+	try:
+		coords = tuple(round(i) for i in coords)
+	except (OverflowError, ValueError):
+		return None
+	for i in range(-root_size, root_size+1):
+		downward_diagonal_coords = coords[0] - i, coords[1] - i
+		screen.set_at(downward_diagonal_coords, color)
+		upward_diagonal_coords = coords[0] - i, coords[1] + i
+		screen.set_at(upward_diagonal_coords, color)
 
 
 def plotting(f):
 	for x in range(width):
 		for y in range(height):
-			point = get_z_from_coords(x, height-y)
+			coords = x, y
+			point = get_z_from_coords(coords)
 			z, i = newton(f, point)
 			color = get_rgb_from_complex(z, i)
-			screen.set_at((x, y), [int(255*c) for c in color])
+			screen.set_at(coords, [int(255*c) for c in color])
+			if i < iterations - 1:
+				draw_x(get_coords_from_z(z))
 		refresh()
 
 # PYGAME STUFF
-black =   0,   0,   0
-white = 255, 255, 255
-
-size = 600, 600
-width, height = size
-
 pygame.init()
 screen = pygame.display.set_mode(size)
 refresh = pygame.display.flip
