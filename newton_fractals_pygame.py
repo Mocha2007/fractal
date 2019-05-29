@@ -1,5 +1,5 @@
 import pygame
-from math import atan2, isnan, pi
+from math import atan2, isnan, log10, pi
 from colorsys import hsv_to_rgb
 from inspect import getsourcelines
 
@@ -8,14 +8,14 @@ nan = float('nan')
 black = 0, 0, 0
 red = 255, 0, 0
 
-size = 300, 300
+size = 400, 400
 width, height = size
 root_size = 4
 
 graph_width = 2
 iterations = 50
 tolerance = 10**-6
-function = lambda z: z**3 - 1
+function = lambda z: z**4 - 5*z**2 + 4
 
 
 def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
@@ -82,7 +82,8 @@ def draw_x(coords: (int, int), color: (int, int, int)=black):
 		screen.set_at(upward_diagonal_coords, color)
 
 
-def plotting(f):
+def plotting(f): # each pixel takes ~60 microseconds avg.
+	zeroes = set()
 	for x in range(width):
 		for y in range(height):
 			coords = x, y
@@ -91,18 +92,24 @@ def plotting(f):
 			color = get_rgb_from_complex(z, i)
 			screen.set_at(coords, [int(255*c) for c in color])
 			if i < iterations - 1:
-				draw_x(get_coords_from_z(z))
+				r = int(-log10(tolerance))
+				zeroes.add(round(z.real, r) + 1j * round(z.imag, r))
 		refresh()
+	for zero in zeroes:
+		draw_x(get_coords_from_z(zero))
+	refresh()
 
 # PYGAME STUFF
 pygame.init()
 screen = pygame.display.set_mode(size)
 refresh = pygame.display.flip
-pygame.display.set_caption('Newton Fractal of ' + getsourcelines(function)[0][0])
+title = 'Newton Fractal of ' + getsourcelines(function)[0][0]
+pygame.display.set_caption(title)
 
 # MAIN
 
 plotting(function)
+pygame.image.save(screen, 'fractal.png')
 while 1:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
