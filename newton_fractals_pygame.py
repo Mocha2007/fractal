@@ -14,7 +14,7 @@ width, height = size
 graph_width = 2
 iterations = 50
 tolerance = 10**-6
-function = lambda z: z**3 - 1
+function = lambda z: z**(4+3j) - 1
 
 
 def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
@@ -41,7 +41,7 @@ def newton(f, z: complex) -> (complex, int):
 			if f_ == 0: # no zero
 				return inf, 0
 			c = f(z)/f_
-		except ValueError:
+		except (ValueError, ZeroDivisionError):
 			return nan, 0
 		except OverflowError:
 			return z, iterations
@@ -65,7 +65,7 @@ def get_z_from_coords(x: int, y: int) -> complex:
 def plotting(f):
 	for x in range(width):
 		for y in range(height):
-			point = get_z_from_coords(x, y)
+			point = get_z_from_coords(x, height-y)
 			z, i = newton(f, point)
 			color = get_rgb_from_complex(z, i)
 			screen.set_at((x, y), [int(255*c) for c in color])
