@@ -9,15 +9,16 @@ nan = float('nan')
 black = 0, 0, 0
 red = 255, 0, 0
 
-size = 150, 150
+size = 1920, 1080
 width, height = size
 root_size = 4
 
-graph_width = 2
+graph_width = 2 # how much the screen width is
+graph_height = height/width * graph_width# autocalculated
 iterations = 50
 tolerance = 10**-6
 import cmath
-function = lambda z: z**3 - 2*z + 2
+function = lambda z: z**3 - 1
 
 
 def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
@@ -62,13 +63,13 @@ def map_to_range(start: float, end: float, fraction: float) -> float:
 def get_z_from_coords(coords: (int, int)) -> complex:
 	x, y = coords
 	real = map_to_range(-graph_width, graph_width, x/width)
-	imag = map_to_range(-graph_width, graph_width, (height-y)/height)
+	imag = map_to_range(-graph_height, graph_height, (height-y)/height)
 	return real+1j*imag
 
 
 def get_coords_from_z(z: complex) -> (int, int):
 	x = map_to_range(0, width, z.real / (2*graph_width) + 1/2)
-	y = map_to_range(height, 0, z.imag / (2*graph_width) + 1/2)
+	y = map_to_range(height, 0, z.imag / (2*graph_height) + 1/2)
 	return x, y
 
 
@@ -76,6 +77,8 @@ def draw_x(coords: (int, int), color: (int, int, int)=black):
 	try:
 		coords = tuple(round(i) for i in coords)
 	except (OverflowError, ValueError):
+		return None
+	if not (0 < coords[0] < width) or not (0 < coords[1] < width):
 		return None
 	for i in range(-root_size, root_size+1):
 		downward_diagonal_coords = coords[0] - i, coords[1] - i
@@ -121,7 +124,7 @@ pygame.display.set_caption(title)
 
 # MAIN
 
-movie(lambda x: lambda z: (z-1)*(z**2+1)*(z - x), -2, 2, 100)
+# movie(lambda c: lambda z: (z - (-1)**c)*(z - 1j**c)*(z - (-1j)**c), 0, 4, 300)
 plotting(function)
 pygame.image.save(screen, 'fractal.png')
 while 1:
