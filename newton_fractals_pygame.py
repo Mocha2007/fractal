@@ -1,5 +1,5 @@
 import pygame
-from math import atan2, isnan, log10, pi
+from math import atan2, isnan, log, log10, pi
 from colorsys import hsv_to_rgb
 from inspect import getsourcelines
 from time import sleep
@@ -9,7 +9,7 @@ nan = float('nan')
 black = 0, 0, 0
 red = 255, 0, 0
 
-size = 1920, 1080
+size = 500, 250
 width, height = size
 root_size = 4
 
@@ -21,13 +21,12 @@ import cmath
 function = lambda z: z**3 - 1
 
 
-def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
+def get_rgb_from_complex(z: complex, smoothed: float) -> (float, float, float):
 	if abs(z) == inf or isnan(z.real) or isnan(z.imag):
 		return 0.5, 0.5, 0.5
 	theta = atan2(z.imag, z.real) % (2*pi)
 	theta /= 2*pi
-	value = 1 - i / iterations
-	return hsv_to_rgb(theta, 1, value)
+	return hsv_to_rgb(theta, 1, smoothed)
 
 
 def derivative(f, x: float, n: int=1) -> float:
@@ -39,20 +38,35 @@ def derivative(f, x: float, n: int=1) -> float:
 
 
 def newton(f, z: complex) -> (complex, int):
+	zlist = []
 	for i in range(iterations):
+		zlist.append(z)
 		try:
 			f_ = derivative(f, z)
 			if f_ == 0: # no zero
-				return inf, 0
+				zlist.append(nan)
+				break
 			c = f(z)/f_
 		except (ValueError, ZeroDivisionError):
-			return nan, 0
+			zlist.append(nan)
+			break
 		except OverflowError:
-			return z, iterations
+			break
 		if abs(c) < tolerance: # converges
 			break
 		z -= c
-	return z, i
+	return zlist
+
+
+def smoothing(zlist: list) -> float:
+	i = len(zlist)
+	try:
+		z0, z1, root = zlist[-3:]
+		ld0 = log(abs(z0 - root))
+		ld1 = log(abs(z1 - root))
+		return 1 - (i + .5 * (log(tolerance) - ld0)/(ld1 - ld0))/iterations
+	except ValueError:
+		return 1 - i/iterations
 
 
 def map_to_range(start: float, end: float, fraction: float) -> float:
@@ -93,10 +107,11 @@ def plotting(f): # ~40 µs/px avg.
 		for y in range(height):
 			coords = x, y
 			point = get_z_from_coords(coords)
-			z, i = newton(f, point)
-			color = get_rgb_from_complex(z, i)
+			zlist = newton(f, point)
+			z, i = zlist[-1], len(zlist)
+			color = get_rgb_from_complex(z, smoothing(zlist))
 			screen.set_at(coords, [int(255*c) for c in color])
-			if i < iterations - 1:
+			if i < iterations:
 				r = int(-log10(tolerance))
 				zeroes.add(round(z.real, r) + 1j * round(z.imag, r))
 		refresh()
