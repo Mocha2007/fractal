@@ -64,7 +64,7 @@ def smoothing(zlist: list) -> float:
 		z0, z1, root = zlist[-3:]
 		ld0 = log(abs(z0 - root))
 		ld1 = log(abs(z1 - root))
-		return 1 - (i + .5 * (log(tolerance) - ld0)/(ld1 - ld0))/iterations
+		return 1 - (i + (.5*log(tolerance) - ld0)/(ld1 - ld0))/iterations
 	except ValueError:
 		return 1 - i/iterations
 
