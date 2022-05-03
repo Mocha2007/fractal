@@ -10,13 +10,13 @@ nan = float('nan')
 black = 0, 0, 0
 red = 255, 0, 0
 
-size = 500, 250
+size = 500, 500
 width, height = size
 root_size = 4
 
 graph_width = 2 # how much the screen width is
 graph_height = height/width * graph_width# autocalculated
-function = lambda z: z**3 - 1
+function = lambda z: z**3 - 2*z + 2
 
 def smoothing(zlist: list) -> float:
 	i = len(zlist)
