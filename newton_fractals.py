@@ -5,7 +5,7 @@ from typing import Tuple
 from common import derivative, get_rgb_from_complex, get_rgb_from_i, inf, iterations, nan, tolerance
 
 graph_width = 2
-resolution = 49
+resolution = 99
 
 # generate point grid
 def get_grid() -> np.array:
@@ -53,6 +53,7 @@ def plotting(f):
 	plt.ylabel('imag')
 	plt.xlim(-graph_width, graph_width)
 	plt.ylim(-graph_width, graph_width)
+	plt.gca().set_aspect('equal')
 
 	# iterations
 	plt.subplot(1, 3, 2)
@@ -64,6 +65,7 @@ def plotting(f):
 	plt.ylabel('imag')
 	plt.xlim(-graph_width, graph_width)
 	plt.ylim(-graph_width, graph_width)
+	plt.gca().set_aspect('equal')
 
 	# function plot
 	plt.subplot(1, 3, 3)
