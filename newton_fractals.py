@@ -36,17 +36,18 @@ def plotting(f):
 	# plotting
 	# actual fractal
 	plt.subplot(1, 3, 1)
-	ilist = []
-	zlist = []
-	# todo plot roots
-	for point in get_grid():
-		z, i = newton(f, point)
-		ilist.append((point, i))
-		zlist.append(z)
-		color = get_rgb_from_complex(z, i)
-		plt.scatter(point.real, point.imag, marker='s', color=color) # 3 ms
-		if i < iterations-1:
-			plt.scatter(z.real, z.imag, marker='x', color=(0, 0, 0)) # 2 ms
+	pointlist = get_grid()
+	newtonlist = [newton(f, point) for point in pointlist]
+	print(len(list(newtonlist)))
+	# zlist, ilist = zip(*newtonlist)
+	colorlist = map(lambda x: get_rgb_from_complex(*x), newtonlist)
+	scatter1list = list(map(lambda x: x.real, pointlist)), \
+		list(map(lambda x: x.imag, pointlist)), \
+		colorlist
+	plt.scatter(scatter1list[0], scatter1list[1], marker='s', color=list(scatter1list[2]))
+	zerolist = [x[0] for x in filter(lambda x: x[1] < iterations-1, newtonlist[::100])]
+	plt.scatter(list(map(lambda x: x.real, zerolist)), list(map(lambda x: x.imag, zerolist)), marker='x', color=(0, 0, 0))
+	# ...
 	plt.title('Newton Fractal')
 	plt.xlabel('real')
 	plt.ylabel('imag')
@@ -55,11 +56,9 @@ def plotting(f):
 
 	# iterations
 	plt.subplot(1, 3, 2)
-	for (point, i), z in zip(ilist, zlist):
-		color = get_rgb_from_i(i)
-		plt.scatter(point.real, point.imag, marker='s', color=color)
-		if i < iterations-1:
-			plt.scatter(z.real, z.imag, marker='x', color=(1, 0, 0))
+	color2list = list(map(lambda x: get_rgb_from_i(x[1]), newtonlist))
+	plt.scatter(scatter1list[0], scatter1list[1], marker='s', color=color2list)
+	plt.scatter(list(map(lambda x: x.real, zerolist)), list(map(lambda x: x.imag, zerolist)), marker='x', color=(1, 0, 0))
 	plt.title('Iterations')
 	plt.xlabel('real')
 	plt.ylabel('imag')
