@@ -1,8 +1,9 @@
 import pygame
-from math import atan2, isnan, log, log10, pi
-from colorsys import hsv_to_rgb
+from math import log, log10
 from inspect import getsourcelines
 from time import sleep
+from typing import Tuple
+from common import get_rgb_from_complex, iterations, newton, tolerance
 
 inf = float('inf')
 nan = float('nan')
@@ -15,49 +16,7 @@ root_size = 4
 
 graph_width = 2 # how much the screen width is
 graph_height = height/width * graph_width# autocalculated
-iterations = 50
-tolerance = 10**-6
-import cmath
 function = lambda z: z**3 - 1
-
-
-def get_rgb_from_complex(z: complex, smoothed: float) -> (float, float, float):
-	if abs(z) == inf or isnan(z.real) or isnan(z.imag):
-		return 0.5, 0.5, 0.5
-	theta = atan2(z.imag, z.real) % (2*pi)
-	theta /= 2*pi
-	return hsv_to_rgb(theta, 1, smoothed)
-
-
-def derivative(f, x: float, n: int=1) -> float:
-	assert 0 < n and type(n) == int
-	n -= 1
-	if n:
-		return derivative(lambda a: derivative(f, a), x, n)
-	return (f(x+tolerance) - f(x)) / tolerance
-
-
-def newton(f, z: complex) -> (complex, int):
-	zlist = []
-	for i in range(iterations):
-		zlist.append(z)
-		try:
-			f_ = derivative(f, z)
-			if f_ == 0: # no zero
-				zlist.append(nan)
-				break
-			c = f(z)/f_
-		except (ValueError, ZeroDivisionError):
-			zlist.append(nan)
-			break
-		except OverflowError:
-			break
-		z -= c
-		if abs(c) < tolerance: # converges
-			zlist.append(z)
-			break
-	return zlist
-
 
 def smoothing(zlist: list) -> float:
 	i = len(zlist)
@@ -77,20 +36,20 @@ def map_to_range(start: float, end: float, fraction: float) -> float:
 	return (end-start) * fraction + start
 
 
-def get_z_from_coords(coords: (int, int)) -> complex:
+def get_z_from_coords(coords: Tuple[int, int]) -> complex:
 	x, y = coords
 	real = map_to_range(-graph_width, graph_width, x/width)
 	imag = map_to_range(-graph_height, graph_height, (height-y)/height)
 	return real+1j*imag
 
 
-def get_coords_from_z(z: complex) -> (int, int):
+def get_coords_from_z(z: complex) -> Tuple[int, int]:
 	x = map_to_range(0, width, z.real / (2*graph_width) + 1/2)
 	y = map_to_range(height, 0, z.imag / (2*graph_height) + 1/2)
 	return x, y
 
 
-def draw_x(coords: (int, int), color: (int, int, int)=black):
+def draw_x(coords: Tuple[int, int], color: Tuple[int, int, int] = black):
 	try:
 		coords = tuple(round(i) for i in coords)
 	except (OverflowError, ValueError):

@@ -1,56 +1,22 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-from math import atan2, isnan, pi
-from colorsys import hsv_to_rgb
-
-inf = float('inf')
-nan = float('nan')
-
+from typing import Tuple
+from common import derivative, get_rgb_from_complex, get_rgb_from_i, inf, iterations, nan, tolerance
 
 graph_width = 2
-x_range = np.linspace(-graph_width, graph_width, 100)
-iterations = 50
 resolution = 49
-resolution_axis = np.linspace(-graph_width, graph_width, resolution)
-tolerance = 10**-6
-color_convergence = 2
-
 
 # generate point grid
 def get_grid() -> np.array:
 	a = np.zeros(resolution**2, dtype=complex)
+	resolution_axis = np.linspace(-graph_width, graph_width, resolution)
 	for i, real in enumerate(resolution_axis):
 		for j, imag in enumerate(resolution_axis):
 			a[i*resolution+j] = real + imag * 1j
 	return a
 
-
-point_grid = get_grid()
-
-
-def get_rgb_from_complex(z: complex, i: int) -> (float, float, float):
-	if abs(z) == inf or isnan(z.real) or isnan(z.imag):
-		return 0.5, 0.5, 0.5
-	theta = atan2(z.imag, z.real) % (2*pi)
-	theta /= 2*pi
-	value = 1 - i / iterations
-	return hsv_to_rgb(theta, 1, value)
-
-
-def get_rgb_from_i(i: int) -> (float, float, float):
-	return hsv_to_rgb(0, 0, (i/iterations)**(1/color_convergence))
-
-
-def derivative(f, x: float, n: int=1) -> float:
-	assert 0 < n and type(n) == int
-	n -= 1
-	if n:
-		return derivative(lambda a: derivative(f, a), x, n)
-	return (f(x+tolerance) - f(x)) / tolerance
-
-
-def newton(f, z: complex) -> (complex, int):
+def newton(f, z: complex) -> Tuple[complex, int]:
 	for i in range(iterations):
 		try:
 			f_ = derivative(f, z)
@@ -66,7 +32,6 @@ def newton(f, z: complex) -> (complex, int):
 		z -= c
 	return z, i
 
-
 def plotting(f):
 	# plotting
 	# actual fractal
@@ -74,7 +39,7 @@ def plotting(f):
 	ilist = []
 	zlist = []
 	# todo plot roots
-	for point in point_grid:
+	for point in get_grid():
 		z, i = newton(f, point)
 		ilist.append((point, i))
 		zlist.append(z)
@@ -103,6 +68,7 @@ def plotting(f):
 
 	# function plot
 	plt.subplot(1, 3, 3)
+	x_range = np.linspace(-graph_width, graph_width, 100)
 	reals = [f(x).real for x in x_range]
 	imags = [f(x).imag for x in x_range]
 	plt.plot(x_range, reals, 'b')
@@ -125,6 +91,5 @@ def plotting(f):
 
 	plt.show()
 
-import cmath
 plotting(lambda z: z**3 - 2*z + 2)
 # plotting(lambda z: z**(4+3j) - 1)
