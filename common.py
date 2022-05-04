@@ -50,3 +50,18 @@ def halley(f, z: complex) -> list[complex]:
 			break
 		z -= c
 	return zlist
+
+def newton_prime(z_: complex) -> list[complex]:
+	z = z_ / 3 # average of the three roots
+	f = lambda x: (x - z_)*(x*x - 1)
+	zlist = []
+	for _ in range(iterations):
+		zlist.append(z)
+		try:
+			c = f(z)/derivative(f, z)
+		except (OverflowError, ValueError, ZeroDivisionError):
+			break
+		if abs(c) < tolerance: # converges
+			break
+		z -= c
+	return zlist
