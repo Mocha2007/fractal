@@ -10,7 +10,7 @@ nan = float('nan')
 black = 0, 0, 0
 red = 255, 0, 0
 
-size = 500, 500
+size = 900, 900
 width, height = size
 root_size = 4
 
