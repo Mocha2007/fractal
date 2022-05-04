@@ -27,7 +27,9 @@ def get_filename(raw_string: str) -> str:
 	return f'gfx/{raw_string}.png'
 
 def get_rgb_from_complex(z: complex, smoothed: float) -> tuple[float, float, float]:
-	if abs(z) == inf or isnan(z.real) or isnan(z.imag):
+	if abs(z) == inf:
+		return 1, 1, 1
+	if isnan(z.real) or isnan(z.imag):
 		return 0.5, 0.5, 0.5
 	theta = atan2(z.imag, z.real) % (2*pi)
 	theta /= 2*pi
@@ -42,8 +44,11 @@ def newton(f, z: complex) -> list[complex]:
 		zlist.append(z)
 		try:
 			c = f(z)/derivative(f, z)
-		except (OverflowError, ValueError, ZeroDivisionError):
+		except (OverflowError, ValueError):
 			zlist.append(nan)
+			break
+		except ZeroDivisionError:
+			zlist.append(inf)
 			break
 		if abs(c) < tolerance: # converges
 			break
