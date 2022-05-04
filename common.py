@@ -22,6 +22,7 @@ def get_filename(raw_string: str) -> str:
 		.replace(":", ") =") \
 		.replace("**", "^") \
 		.replace("*", "") \
+		.replace("/", "DIV") \
 		.replace("\n", "")
 	return f'gfx/{raw_string}.png'
 
