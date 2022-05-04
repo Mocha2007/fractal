@@ -5,8 +5,6 @@ from time import sleep
 from typing import Tuple
 from common import get_rgb_from_complex, iterations, newton, tolerance
 
-inf = float('inf')
-nan = float('nan')
 black = 0, 0, 0
 red = 255, 0, 0
 
