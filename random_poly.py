@@ -5,22 +5,22 @@ from common import newton
 black = 0, 0, 0
 red = 255, 0, 0
 
-size = 512, 512
+size = 1024, 1024
 width, height = size
 
 r_min = -1
 r_max = 1
 i_min = -1
 i_max = 1
-degree = 10 # random quadratics
-max_coeff_mag = 9
+degree = 20 # random quadratics
+max_coeff_mag = 1
 
 graph_width = r_max - r_min
 graph_height = i_max - i_min
 
 
 def exit_program() -> None:
-	pygame.image.save(screen, 'poly.png')
+	pygame.image.save(screen, f'poly{degree}-{max_coeff_mag}.png')
 	pygame.display.quit()
 	pygame.quit()
 	exit()
@@ -48,7 +48,7 @@ def heat(coords: tuple[int, int]) -> None:
 def plotting():
 	while 1:
 		# generate random polynomial
-		c = [random() for _ in range(degree+1)]
+		c = [randint(-max_coeff_mag, max_coeff_mag) for _ in range(degree+1)]
 		f = lambda x: sum(c[i]*x**i for i in range(degree+1))
 		# find ONE root of it
 		initial_guess = 1j**(4*random())
