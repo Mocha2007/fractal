@@ -15,6 +15,16 @@ def derivative(f, x: float, n: int=1) -> float:
 		return derivative(lambda a: derivative(f, a), x, n)
 	return (f(x+tolerance) - f(x)) / tolerance
 
+def get_filename(raw_string: str) -> str:
+	# invalid chars:
+	# \/:*?"<>|
+	raw_string = raw_string.replace("lambda ", "f(") \
+		.replace(":", ") =") \
+		.replace("**", "^") \
+		.replace("*", "") \
+		.replace("\n", "")
+	return f'gfx/{raw_string}.png'
+
 def get_rgb_from_complex(z: complex, smoothed: float) -> tuple[float, float, float]:
 	if abs(z) == inf or isnan(z.real) or isnan(z.imag):
 		return 0.5, 0.5, 0.5

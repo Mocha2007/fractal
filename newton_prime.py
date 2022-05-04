@@ -1,6 +1,6 @@
 import pygame
 from math import log
-from common import get_rgb_from_complex, iterations, newton_prime, tolerance
+from common import get_filename, get_rgb_from_complex, iterations, newton_prime, tolerance
 
 black = 0, 0, 0
 red = 255, 0, 0
@@ -66,4 +66,4 @@ pygame.display.set_caption(title)
 
 # movie(lambda c: lambda z: (z - (-1)**c)*(z - 1j**c)*(z - (-1j)**c), 0, 4, 300)
 plotting()
-pygame.image.save(screen, 'fractal.png')
+pygame.image.save(screen, get_filename(f'{title} {r_min + 1j*i_min} to {r_max + 1j*i_max}'))

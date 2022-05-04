@@ -1,6 +1,6 @@
 import pygame
 from random import randint, random
-from common import newton
+from common import get_filename, newton
 
 white = 255, 255, 255
 
@@ -19,7 +19,7 @@ graph_height = i_max - i_min
 
 
 def exit_program() -> None:
-	pygame.image.save(screen, f'poly{degree}-{max_coeff_mag}.png')
+	pygame.image.save(screen, get_filename(f'poly{degree}-{max_coeff_mag}'))
 	pygame.display.quit()
 	pygame.quit()
 	exit()

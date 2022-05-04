@@ -3,7 +3,7 @@ from math import log, log10
 from inspect import getsourcelines
 from time import sleep
 from typing import Tuple
-from common import get_rgb_from_complex, iterations, newton, tolerance
+from common import get_filename, get_rgb_from_complex, iterations, newton, tolerance
 
 black = 0, 0, 0
 red = 255, 0, 0
@@ -25,7 +25,7 @@ def smoothing(zlist: list[complex]) -> float:
 		correction = (log(tolerance) - ld0)/(ld1 - ld0)
 		value = 1 - (i + 0.5*correction)/iterations
 		return min(1, max(0, value))
-	except ValueError:
+	except (ValueError, ZeroDivisionError):
 		return 1 - i/iterations
 
 
@@ -101,7 +101,7 @@ pygame.display.set_caption(title)
 
 # movie(lambda c: lambda z: (z - (-1)**c)*(z - 1j**c)*(z - (-1j)**c), 0, 4, 300)
 plotting(function)
-pygame.image.save(screen, 'fractal.png')
+pygame.image.save(screen, get_filename(title.replace('function = ', '')))
 while 1:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
