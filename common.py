@@ -1,5 +1,5 @@
 from colorsys import hsv_to_rgb
-from math import isnan, atan2, pi
+from math import atan2, isnan, pi
 
 inf = float('inf')
 nan = float('nan')
@@ -31,6 +31,19 @@ def newton(f, z: complex) -> list[complex]:
 		zlist.append(z)
 		try:
 			c = f(z)/derivative(f, z)
+		except (OverflowError, ValueError, ZeroDivisionError):
+			break
+		if abs(c) < tolerance: # converges
+			break
+		z -= c
+	return zlist
+
+def halley(f, z: complex) -> list[complex]:
+	zlist = []
+	for _ in range(iterations):
+		zlist.append(z)
+		try:
+			c = 2*f(z)*derivative(f, z)/(2*derivative(f, z)**2 - f(z)*derivative(f, z, 2))
 		except (OverflowError, ValueError, ZeroDivisionError):
 			break
 		if abs(c) < tolerance: # converges
