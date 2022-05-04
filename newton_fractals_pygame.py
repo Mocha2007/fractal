@@ -18,14 +18,14 @@ graph_width = 2 # how much the screen width is
 graph_height = height/width * graph_width# autocalculated
 function = lambda z: z**3 - 2*z + 2
 
-def smoothing(zlist: list) -> float:
+def smoothing(zlist: list[complex]) -> float:
 	i = len(zlist)
 	try:
 		z0, z1, root = zlist[-3:]
 		ld0 = log(abs(z0 - root))
 		ld1 = log(abs(z1 - root))
 		correction = (log(tolerance) - ld0)/(ld1 - ld0)
-		value = 1 - (i + correction)/iterations
+		value = 1 - (i + 0.5*correction)/iterations
 		return min(1, max(0, value))
 	except ValueError:
 		return 1 - i/iterations

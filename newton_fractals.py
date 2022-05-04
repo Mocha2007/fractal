@@ -1,3 +1,4 @@
+from math import atan2, hsv_to_rgb, isnan, pi
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -6,6 +7,14 @@ from common import derivative, get_rgb_from_complex, get_rgb_from_i, inf, iterat
 
 graph_width = 2
 resolution = 99
+
+def get_rgb_from_complex(z: complex, i: int) -> Tuple[float, float, float]:
+	if abs(z) == inf or isnan(z.real) or isnan(z.imag):
+		return 0.5, 0.5, 0.5
+	theta = atan2(z.imag, z.real) % (2*pi)
+	theta /= 2*pi
+	value = 1 - i / iterations
+	return hsv_to_rgb(theta, 1, value)
 
 # generate point grid
 def get_grid() -> np.array:
