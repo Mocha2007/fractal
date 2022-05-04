@@ -57,7 +57,7 @@ def plotting():
 		coords = get_coords_from_z(r)
 		try:
 			heat(coords)
-		except (IndexError, ValueError):
+		except (IndexError, OverflowError, ValueError):
 			continue
 		refresh()
 		# check if exiting
