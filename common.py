@@ -9,7 +9,7 @@ iterations = 20
 tolerance = 1e-6
 
 def derivative(f, x: float, n: int=1) -> float:
-	assert 0 < n and type(n) == int
+	# assert 0 < n and type(n) == int
 	n -= 1
 	if n:
 		return derivative(lambda a: derivative(f, a), x, n)
