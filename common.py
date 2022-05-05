@@ -44,10 +44,11 @@ def newton(f, z: complex) -> list[complex]:
 		zlist.append(z)
 		try:
 			c = f(z)/derivative(f, z)
-		except (OverflowError, ValueError):
+		except ValueError:
 			zlist.append(nan)
 			break
-		except ZeroDivisionError:
+		except (OverflowError, ZeroDivisionError):
+			# OverflowError, from my experience, usually implies divergence
 			zlist.append(inf)
 			break
 		if abs(c) < tolerance: # converges
