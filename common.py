@@ -66,6 +66,19 @@ def get_rgb_from_complex(z: complex, smoothed: float) -> tuple[float, float, flo
 def get_rgb_from_i(i: int) -> tuple[float, float, float]:
 	return hsv_to_rgb(0, 0, (i/iterations)**(1/color_convergence))
 
+def halley(f, z: complex) -> list[complex]:
+	zlist = []
+	for _ in range(iterations):
+		zlist.append(z)
+		try:
+			c = 2*f(z)*derivative(f, z)/(2*derivative(f, z)**2 - f(z)*derivative(f, z, 2))
+		except (OverflowError, ValueError, ZeroDivisionError):
+			break
+		if abs(c) < tolerance: # converges
+			break
+		z -= c
+	return zlist
+
 def newton(f, z: complex) -> list[complex]:
 	zlist = []
 	for _ in range(iterations):
@@ -78,19 +91,6 @@ def newton(f, z: complex) -> list[complex]:
 		except (OverflowError, ZeroDivisionError):
 			# OverflowError, from my experience, usually implies divergence
 			zlist.append(inf)
-			break
-		if abs(c) < tolerance: # converges
-			break
-		z -= c
-	return zlist
-
-def halley(f, z: complex) -> list[complex]:
-	zlist = []
-	for _ in range(iterations):
-		zlist.append(z)
-		try:
-			c = 2*f(z)*derivative(f, z)/(2*derivative(f, z)**2 - f(z)*derivative(f, z, 2))
-		except (OverflowError, ValueError, ZeroDivisionError):
 			break
 		if abs(c) < tolerance: # converges
 			break
