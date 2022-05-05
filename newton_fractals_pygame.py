@@ -8,7 +8,7 @@ from common import get_filename, get_rgb_from_complex, iterations, newton, toler
 black = 0, 0, 0
 red = 255, 0, 0
 
-size = 900, 900
+size = 1024, 1024
 width, height = size
 root_size = 4
 
